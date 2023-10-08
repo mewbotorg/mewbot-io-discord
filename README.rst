@@ -1,6 +1,8 @@
 .. SPDX-FileCopyrightText: 2023 Mewbot Developers <mewbot@quicksilver.london>
 ..
-.. SPDX-License-Identifier: BSD-2-Clause==============
+.. SPDX-License-Identifier: BSD-2-Clause
+
+==============
 mewbot-discord
 ==============
 
