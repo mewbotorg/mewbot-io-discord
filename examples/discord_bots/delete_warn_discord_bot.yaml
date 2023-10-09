@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2021 - 2023 Mewbot Developers <mewbot@quicksilver.london>
+#
+# SPDX-License-Identifier: CC-BY-4.0
+
+kind: IOConfig
+implementation: mewbot.io.discord.DiscordIO
+uuid: aaaaaaaa-aaaa-4aaa-0001-aaaaaaaaaa00
+properties:
+  token: "[token goes here]"
+
+---
+
+kind: Behaviour
+implementation: mewbot.api.v1.Behaviour
+uuid: aaaaaaaa-aaaa-4aaa-0001-aaaaaaaaaa01
+properties:
+  name: 'Echo Inputs'
+triggers:
+  - kind: Trigger
+    implementation: examples.discord_bots.delete_warn_discord_bot.DiscordDeleteEventTrigger
+    uuid: aaaaaaaa-aaaa-4aaa-0001-aaaaaaaaaa02
+    properties: {}
+conditions: []
+actions:
+  - kind: Action
+    implementation: examples.discord_bots.delete_warn_discord_bot.DiscordDeleteResponseAction
+    uuid: aaaaaaaa-aaaa-4aaa-0001-aaaaaaaaaa03
+    properties: {}

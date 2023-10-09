@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2021 - 2023 Mewbot Developers <mewbot@quicksilver.london>
+#
+# SPDX-License-Identifier: CC-BY-4.0
+
+kind: IOConfig
+implementation: mewbot.io.discord.DiscordIO
+uuid: aaaaaaaa-aaaa-4aaa-0001-aaaaaaaaaa00
+properties:
+  token: "[token goes here]"
+  startup_queue_depth: 5
+
+---
+
+kind: Behaviour
+implementation: mewbot.api.v1.Behaviour
+uuid: aaaaaaaa-aaaa-4aaa-0001-aaaaaaaaaa01
+properties:
+  name: 'Echo Inputs'
+triggers:
+  - kind: Trigger
+    implementation: examples.discord_bots.history_discord_bot.DiscordAllCommandTrigger
+    uuid: aaaaaaaa-aaaa-4aaa-0001-aaaaaaaaaa02
+    properties:
+      command: "!hello"
+conditions: []
+actions:
+  - kind: Action
+    implementation: examples.discord_bots.history_discord_bot.DiscordPrintAction
+    uuid: aaaaaaaa-aaaa-4aaa-0001-aaaaaaaaaa03
+    properties:
+      message: "world"

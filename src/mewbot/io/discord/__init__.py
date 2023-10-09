@@ -14,9 +14,7 @@ import dataclasses
 import logging
 
 import discord
-
 from mewbot.api.v1 import Input, InputEvent, InputQueue, IOConfig, Output, OutputEvent
-
 
 __version__ = "0.1.0"
 

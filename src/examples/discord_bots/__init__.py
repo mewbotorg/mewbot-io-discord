@@ -2,4 +2,6 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
-pytest_plugins = 'pytester'
+"""
+Classes for providing examples for mewbot-io-discord.
+"""
