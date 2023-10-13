@@ -90,7 +90,7 @@ setuptools.setup(
 
     python_requires=">=3.10",  # Might be relaxed later
 
-    version=get_version('src/mewbot/io/mewbot_io_discord'),
+    version=get_version('src/mewbot/io/discord'),
 
     install_requires=requirements,
 
