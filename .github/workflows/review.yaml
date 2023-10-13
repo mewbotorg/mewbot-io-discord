@@ -29,6 +29,8 @@ jobs:
         name: ["lint", "test"]
         os: ["ubuntu", "macos", "windows"]
         version: ["3.10", "3.11"]
+
+        # Only Lint on Ubuntu (results should always be the same)
         exclude:
           - name: Lint
             os: macos
@@ -48,13 +50,22 @@ jobs:
             requirements.txt
             requirements-dev.txt
 
+      - name: Install mewbot-dev-tools to allow dep install
+        shell: bash
+        run: pip install mewbot-dev-tools
+
       - name: Install dependencies
         shell: bash
-        run: ./tools/install-deps
+        run: python -m mewbot_dev_tools.install_deps
 
       - name: Run Tests
         shell: bash
-        run: ./tools/${{ matrix.name }}
+        run: |
+          PYTHONPATH="$(python -m mewbot_dev_tools.path)"
+          readonly PYTHONPATH
+          export PYTHONPATH
+          
+          mewbot-${{ matrix.name }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -87,10 +98,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python ${{ matrix.version }}
+      - name: Setup Python ${{ env.DEFAULT_PYTHON }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.version }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
           cache: pip
           cache-dependency-path: |
             requirements.txt
@@ -102,13 +113,13 @@ jobs:
         with:
           path: reports
 
-      - name: Install dependencies
+      - name: Install mewbot-dev-tools
         shell: bash
-        run: ./tools/install-deps
+        run: python -m pip install mewbot-dev-tools
 
       - name: Output Annotations
         shell: bash
-        run: ./tools/annotate
+        run: python -m mewbot_dev_tools.annotate
 
   sonarcloud:
     name: SonarCloud
