@@ -7,6 +7,7 @@ run-name: "Automated code review for \"${{ github.head_ref }}\""
 
 on:
   push: # All pushes
+    branches: [ main/master ]
   pull_request: # All pull requests
 
 concurrency:
