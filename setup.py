@@ -49,7 +49,7 @@ current_file = Path(__file__)
 root_repo_dir = current_file.parents[2]
 assert root_repo_dir.exists()
 
-with open(current_file.parent.joinpath("README.md"), "r", encoding="utf-8") as rmf:
+with open(current_file.parent.joinpath("README.rst"), "r", encoding="utf-8") as rmf:
     long_description = rmf.read()
 
 with open(current_file.parent.joinpath("requirements.txt"), "r", encoding="utf-8") as rf:
@@ -109,7 +109,7 @@ setuptools.setup(
 
     description='Mewbot bindings for discord.',
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type="text/rst",
 
     packages=setuptools.find_namespace_packages(where="src", include=["mewbot.*"]),
     package_dir={"": "src"},

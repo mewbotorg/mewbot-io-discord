@@ -1,1 +1,1 @@
-LICENSES/BSD-2-Clause
+LICENSES/BSD-2-Clause.txt
