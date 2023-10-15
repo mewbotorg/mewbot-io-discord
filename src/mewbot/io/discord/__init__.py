@@ -16,67 +16,16 @@ import logging
 import discord
 from mewbot.api.v1 import Input, InputEvent, InputQueue, IOConfig, Output, OutputEvent
 
+from .events import (
+    DiscordInputEvent,
+    DiscordMessageCreationEvent,
+    DiscordMessageDeleteInputEvent,
+    DiscordMessageEditInputEvent,
+    DiscordOutputEvent,
+    DiscordUserJoinInputEvent,
+)
+
 __version__ = "0.1.0"
-
-
-@dataclasses.dataclass
-class DiscordInputEvent(InputEvent):
-    """
-    Base class for an event occurring on a monitored discord server.
-    """
-
-
-@dataclasses.dataclass
-class DiscordUserJoinInputEvent(DiscordInputEvent):
-    """
-    Class which represents a user joining one of the discord channels which the bot has access to.
-    """
-
-    member: discord.member.Member
-
-
-@dataclasses.dataclass
-class DiscordMessageCreationEvent(DiscordInputEvent):
-    """
-    A discord message has been created in a channel on a server the bot monitors.
-    """
-
-    text: str
-    message: discord.Message
-
-
-@dataclasses.dataclass
-class DiscordMessageEditInputEvent(DiscordInputEvent):
-    """
-    A discord message has been edited in a channel on a server the bot monitors.
-    """
-
-    text_before: str
-    message_before: discord.Message
-
-    text_after: str
-    message_after: discord.Message
-
-
-@dataclasses.dataclass
-class DiscordMessageDeleteInputEvent(DiscordInputEvent):
-    """
-    A discord message has been deleted in a channel on a server the bot monitors.
-    """
-
-    text_before: str
-    message: discord.Message
-
-
-@dataclasses.dataclass
-class DiscordOutputEvent(OutputEvent):
-    """
-    Currently just used to reply to an input event.
-    """
-
-    text: str
-    message: discord.Message
-    use_message_channel: bool
 
 
 class DiscordIO(IOConfig):
@@ -361,6 +310,10 @@ class DiscordOutput(Output):
 
         if not isinstance(event, DiscordOutputEvent):
             return False
+
+        if event.use_message_channel and event.reply_to_triggering_message:
+            await event.message.reply(event.text)
+            return True
 
         if event.use_message_channel:
             await event.message.channel.send(event.text)
