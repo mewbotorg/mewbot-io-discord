@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from typing import List, Optional, Sequence, Set, Type
 
-import dataclasses
 import logging
 
 import discord
@@ -320,3 +319,16 @@ class DiscordOutput(Output):
             return True
 
         raise NotImplementedError("Currently can only respond to a message")
+
+
+__all__ = [
+    "DiscordInputEvent",
+    "DiscordMessageCreationEvent",
+    "DiscordMessageDeleteInputEvent",
+    "DiscordMessageEditInputEvent",
+    "DiscordOutputEvent",
+    "DiscordUserJoinInputEvent",
+    "DiscordIO",
+    "DiscordInput",
+    "DiscordOutput",
+]
