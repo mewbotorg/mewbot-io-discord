@@ -3,9 +3,9 @@
 # SPDX-License-Identifier: BSD-2-Clause
 
 # Discord module
-py-cord~=2.3.3
+py-cord~=2.4.1
 
-mewbot
-mewbot-api
-mewbot-io
-mewbot-test
+mewbot~=0.0.3
+mewbot-api~=0.0.3
+mewbot-io~=0.0.3
+mewbot-test~=0.0.3
