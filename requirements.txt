@@ -5,7 +5,6 @@
 # Discord module
 py-cord~=2.3.3
 
-# Mewbot
 mewbot
 mewbot-api
 mewbot-io
