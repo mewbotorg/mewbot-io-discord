@@ -15,7 +15,7 @@ import logging
 import discord
 from mewbot.api.v1 import Input, InputEvent, InputQueue, IOConfig, Output, OutputEvent
 
-from .events import (
+from mewbot.io.discord.events import (
     DiscordInputEvent,
     DiscordMessageCreationEvent,
     DiscordMessageDeleteInputEvent,
