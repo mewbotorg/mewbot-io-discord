@@ -19,15 +19,15 @@ SPDX-License-Identifier: CC-BY-4.0
 [![Python versions](https://img.shields.io/pypi/pyversions/mewbot-io-discord.svg)](https://pypi.org/project/mewbot-io-discord)
 
 
-[Mewbot][6] bindings for discord!
+[Mewbot](https://github.com/mewbotorg/mewbot) bindings for discord!
 
 ----
 
-This `mewbot-io` framework plugin was generated with [Cookiecutter][1] along with [@ajcameron][2]'s [template-mewbot-plugin][3] cookiecutter template.
+This `mewbot-io` framework plugin was generated with [Cookiecutter](https://github.com/audreyr/cookiecutter) along with [@ajcameron](https://github.com/ajcameron)'s [template-mewbot-plugin](https://github.com/mewbotorg/template-mewbot-plugin) cookiecutter template.
 
-If you have any issues with the plugin please [file an issue for this plugin!][4]
+If you have any issues with the plugin please [file an issue for this plugin!](https://github.com/mewbotorg/mewbot-io-discord/issues)
 
-If you have any issues, or suggestions, for the template please [file an issue for it's template!][5]
+If you have any issues, or suggestions, for the template please [file an issue for it's template!](https://github.com/mewbotorg/template-mewbot-plugin/issues)
 
 
 # Features
@@ -72,12 +72,3 @@ If you encounter any problems, please `file an issue`_ along with a detailed des
  - [BSD-3 license](http://opensource.org/licenses/BSD-3-Clause)
  - [GNU GPL v3.0](http://www.gnu.org/licenses/gpl-3.0.txt)
  - [Apache Software License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
-# References
-
-1: https://github.com/audreyr/cookiecutter "Cookiecutter"
-2: https://github.com/ajcameron "@ajcameron"
-3: https://github.com/mewbotorg/template-mewbot-plugin "template-mewbot-plugin"
-4: https://github.com/mewbotorg/mewbot-io-discord/issues "file an issue for this plugin!"
-5: https://github.com/mewbotorg/template-mewbot-plugin/issues "file an issue for the template!"
-6: https://github.com/mewbotorg/mewbot "mewbot"
