@@ -25,7 +25,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 This `mewbot-io` framework plugin was generated with [Cookiecutter](https://github.com/audreyr/cookiecutter) along with [@ajcameron](https://github.com/ajcameron)'s [template-mewbot-plugin](https://github.com/mewbotorg/template-mewbot-plugin) cookiecutter template.
 
-If you have any issues with the plugin please [file an issue for this plugin!](https://github.com/mewbotorg/mewbot-io-discord/issues)
+If you have any issues with the plugin please [file an issue for it!](https://github.com/mewbotorg/mewbot-io-discord/issues)
 
 If you have any issues, or suggestions, for the template please [file an issue for it's template!](https://github.com/mewbotorg/template-mewbot-plugin/issues)
 
@@ -75,7 +75,13 @@ Distributed under the terms of the [MIT](http://opensource.org/licenses/MIT) lic
 
 # Issues
 
-If you encounter any problems, please `file an issue`_ along with a detailed description.
+If you encounter any problems, please [file an issue](https://github.com/mewbotorg/mewbot-io-discord/issues) along with a detailed description.
+
+# Features
+
+Likewise, please [raise an issue](https://github.com/mewbotorg/mewbot-io-discord/issues) if there's a feature you want.
+The eventual aim is feature completeness with [pycord](https://github.com/Pycord-Development/pycord)
+- the underlying library that this plugin uses to talk to discord.
 
 # Helpful links
 
