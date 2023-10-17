@@ -42,9 +42,10 @@ If you have any issues, or suggestions, for the template please [file an issue f
 
 # Installation
 
-You can install "mewbot-io-discord" via `pip`_ from `PyPI`_::
-
-    $ pip install mewbot-io-discord
+You can install "mewbot-io-discord" via [pip](https://pypi.org/project/pip/) from [PyPI](https://pypi.org/project)
+```shell
+$ pip install mewbot-io-discord
+```
 
 
 # Usage
@@ -54,12 +55,22 @@ You can install "mewbot-io-discord" via `pip`_ from `PyPI`_::
 
 # Contributing
 
-Contributions are very welcome. Tests can be run with `tox`_, please ensure
-the coverage at least stays the same before you submit a pull request.
+Contributions are very welcome.
+Tests can be run using [Mewbot dev tools](https://github.com/mewbotorg/mewbot-dev-tools).
+These can be installed via
+```shell
+$ pip install mewbot-dev-tools
+```
+Then cd into the root of this repo and run
+```shell
+$ mewbot-test
+```
+Please ensure the coverage at least stays the same before you submit a pull request.
 
 # License
 
-Distributed under the terms of the `MIT`_ license, "mewbot-discord" is free and open source software
+Distributed under the terms of the [MIT](http://opensource.org/licenses/MIT) license.
+"mewbot-io-discord" is free and open source software
 
 
 # Issues
