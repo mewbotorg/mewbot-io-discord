@@ -19,11 +19,15 @@ SPDX-License-Identifier: CC-BY-4.0
 [![Python versions](https://img.shields.io/pypi/pyversions/mewbot-io-discord.svg)](https://pypi.org/project/mewbot-io-discord)
 
 
-Mewbot bindings for discord.
+[6] bindings for discord!
 
 ----
 
-This `mewbot_io`_ framework plugin was generated with `Cookiecutter`_ along with `@ajcameron`_'s `cookiecutter-mewbot-plugin`_ template.
+This `mewbot-io` framework plugin was generated with [1] along with [2]'s [3] template.
+
+If you have any issues with the plugin please [4]
+
+If you have any issues, or suggestions, for the template please [5]
 
 
 # Features
@@ -62,16 +66,18 @@ Distributed under the terms of the `MIT`_ license, "mewbot-discord" is free and 
 
 If you encounter any problems, please `file an issue`_ along with a detailed description.
 
+# Helpful links
+
+ - [MIT license](http://opensource.org/licenses/MIT)
+ - [BSD-3 license](http://opensource.org/licenses/BSD-3-Clause)
+ - [GNU GPL v3.0](http://www.gnu.org/licenses/gpl-3.0.txt)
+ - [Apache Software License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
 # References
 
-[Cookiecutter](https://github.com/audreyr/cookiecutter)
-[@ajcameron](https://github.com/hackebrot)
-[MIT license](http://opensource.org/licenses/MIT)
-[BSD-3 license](http://opensource.org/licenses/BSD-3-Clause)
-[GNU GPL v3.0](http://www.gnu.org/licenses/gpl-3.0.txt)
-[Apache Software License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-[template-mewbot-plugin](https://github.com/mewbotorg/template-mewbot-plugin)
-[file an issue](https://github.com/mewbotorg/mewbot-io-discord/issues)
-[mewbot](https://github.com/mewbotorg/mewbot)
-[pip](https://pypi.org/project/pip/)
-[PyPI](https://pypi.org/project)
+ - [1][Cookiecutter](https://github.com/audreyr/cookiecutter)
+ - [2][@ajcameron](https://github.com/hackebrot)
+ - [3][template-mewbot-plugin](https://github.com/mewbotorg/template-mewbot-plugin)
+ - [4][file an issue for this plugin!](https://github.com/mewbotorg/mewbot-io-discord/issues)
+ - [5][file an issue for the template!](https://github.com/mewbotorg/template-mewbot-plugin/issues)
+ - [6][mewbot](https://github.com/mewbotorg/mewbot)
