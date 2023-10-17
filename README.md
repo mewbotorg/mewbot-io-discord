@@ -19,15 +19,15 @@ SPDX-License-Identifier: CC-BY-4.0
 [![Python versions](https://img.shields.io/pypi/pyversions/mewbot-io-discord.svg)](https://pypi.org/project/mewbot-io-discord)
 
 
-[6] bindings for discord!
+[Mewbot][6] bindings for discord!
 
 ----
 
-This `mewbot-io` framework plugin was generated with [1] along with [2]'s [3] template.
+This `mewbot-io` framework plugin was generated with [Cookiecutter][1] along with [@ajcameron][2]'s [template-mewbot-plugin][3] cookiecutter template.
 
-If you have any issues with the plugin please [4]
+If you have any issues with the plugin please [file an issue for this plugin!][4]
 
-If you have any issues, or suggestions, for the template please [5]
+If you have any issues, or suggestions, for the template please [file an issue for it's template!][5]
 
 
 # Features
@@ -75,9 +75,9 @@ If you encounter any problems, please `file an issue`_ along with a detailed des
 
 # References
 
- - [1][Cookiecutter](https://github.com/audreyr/cookiecutter)
- - [2][@ajcameron](https://github.com/hackebrot)
- - [3][template-mewbot-plugin](https://github.com/mewbotorg/template-mewbot-plugin)
- - [4][file an issue for this plugin!](https://github.com/mewbotorg/mewbot-io-discord/issues)
- - [5][file an issue for the template!](https://github.com/mewbotorg/template-mewbot-plugin/issues)
- - [6][mewbot](https://github.com/mewbotorg/mewbot)
+1: https://github.com/audreyr/cookiecutter "Cookiecutter"
+2: https://github.com/ajcameron "@ajcameron"
+3: https://github.com/mewbotorg/template-mewbot-plugin "template-mewbot-plugin"
+4: https://github.com/mewbotorg/mewbot-io-discord/issues "file an issue for this plugin!"
+5: https://github.com/mewbotorg/template-mewbot-plugin/issues "file an issue for the template!"
+6: https://github.com/mewbotorg/mewbot "mewbot"
