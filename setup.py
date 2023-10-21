@@ -106,6 +106,7 @@ setuptools.setup(
     project_urls={
         "Bug Tracker": "https://github.com/mewbotorg/mewbot-discord/issues",
     },
+    package_data={"": ["py.typed"]},
 
     description='Mewbot bindings for discord.',
     long_description=long_description,
