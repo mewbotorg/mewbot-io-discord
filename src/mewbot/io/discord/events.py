@@ -6,6 +6,8 @@
 Events which your IOConfig can produce/consume.
 """
 
+from typing import Optional
+
 import dataclasses
 
 import discord
@@ -68,6 +70,27 @@ class DiscordOutputEvent(OutputEvent):
     """
 
     text: str
+    message: Optional[discord.Message]
+
+
+@dataclasses.dataclass
+class DiscordReplyIntoMessageChannelOutputEvent(DiscordOutputEvent):
+    """
+    Send a message into the channel that the original show originated from.
+    """
+
+    text: str
     message: discord.Message
-    use_message_channel: bool
-    reply_to_triggering_message: bool = False
+
+
+@dataclasses.dataclass
+class DiscordReplyToMessageOutputEvent(DiscordInputEvent):
+    """
+    Reply to a triggering message.
+
+    This may not have meaning in some contexts - for example, replying to a deleted message is
+    somewhat questionable.
+    """
+
+    text: str
+    message: discord.Message

@@ -21,6 +21,8 @@ from mewbot.io.discord.events import (
     DiscordMessageDeleteInputEvent,
     DiscordMessageEditInputEvent,
     DiscordOutputEvent,
+    DiscordReplyIntoMessageChannelOutputEvent,
+    DiscordReplyToMessageOutputEvent,
     DiscordUserJoinInputEvent,
 )
 
@@ -310,11 +312,19 @@ class DiscordOutput(Output):
         if not isinstance(event, DiscordOutputEvent):
             return False
 
-        if event.use_message_channel and event.reply_to_triggering_message:
+        if isinstance(event, DiscordReplyToMessageOutputEvent):
             await event.message.reply(event.text)
             return True
 
-        if event.use_message_channel:
+        if isinstance(event, DiscordReplyIntoMessageChannelOutputEvent):
+            await event.message.channel.send(event.text)
+            return True
+
+        if isinstance(event, DiscordOutputEvent):
+            # Don't know how to send this message
+            if event.message is None:
+                return False
+
             await event.message.channel.send(event.text)
             return True
 
@@ -331,4 +341,6 @@ __all__ = [
     "DiscordIO",
     "DiscordInput",
     "DiscordOutput",
+    "DiscordReplyIntoMessageChannelOutputEvent",
+    "DiscordReplyToMessageOutputEvent",
 ]

@@ -127,8 +127,6 @@ class DiscordCommandTextResponse(Action):
             self._logger.warning("Received wrong event type %s", type(event))
             return
 
-        test_event = DiscordOutputEvent(
-            text=self._message, message=event.message, use_message_channel=True
-        )
+        test_event = DiscordOutputEvent(text=self._message, message=event.message)
 
         yield test_event

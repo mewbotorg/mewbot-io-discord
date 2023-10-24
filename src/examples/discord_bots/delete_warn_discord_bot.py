@@ -117,6 +117,5 @@ class DiscordDeleteResponseAction(Action):
         test_event = DiscordOutputEvent(
             text=f'User {event.message.author} has deleted message: "{event.message.content}"',
             message=event.message,
-            use_message_channel=True,
         )
         yield test_event

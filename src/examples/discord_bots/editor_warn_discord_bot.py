@@ -111,6 +111,5 @@ class DiscordEditResponse(Action):
             text=f'We have detected editing! "{event.message_before.content}"'
             f' was changed to "f{event.message_after.content}"',
             message=event.message_after,
-            use_message_channel=True,
         )
         yield test_event
