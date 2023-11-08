@@ -21,12 +21,13 @@ from mewbot.io.discord.events import (
     DiscordMessageDeleteInputEvent,
     DiscordMessageEditInputEvent,
     DiscordOutputEvent,
+    DiscordPostToChannelOutputEvent,
     DiscordReplyIntoMessageChannelOutputEvent,
     DiscordReplyToMessageOutputEvent,
     DiscordUserJoinInputEvent,
 )
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 
 class DiscordIO(IOConfig):
@@ -38,6 +39,7 @@ class DiscordIO(IOConfig):
     _output: Optional[DiscordOutput] = None
     _token: str = ""
     _startup_queue_depth: int = 0
+    _client: InternalMewbotDiscordClient
 
     @property
     def token(self) -> str:
@@ -75,6 +77,7 @@ class DiscordIO(IOConfig):
         """
         if not self._input:
             self._input = DiscordInput(self._token, self._startup_queue_depth)
+            self._client = self._input.get_client()
 
         return [self._input]
 
@@ -83,7 +86,7 @@ class DiscordIO(IOConfig):
         Return the DiscordOutput for this DiscordIO.
         """
         if not self._output:
-            self._output = DiscordOutput()
+            self._output = DiscordOutput(active_client=self._client)
 
         return [self._output]
 
@@ -131,6 +134,15 @@ class DiscordInput(Input):
         """
         self.queue = queue
         self._client.queue = queue
+
+    def get_client(self) -> InternalMewbotDiscordClient:
+        """
+        Return the internal client which the Input uses to talk to discord.
+
+        We need the client in the output to allow certain OutputEvents to affect discord.
+        :return:
+        """
+        return self._client
 
     @staticmethod
     def produces_inputs() -> Set[Type[InputEvent]]:
@@ -294,6 +306,16 @@ class DiscordOutput(Output):
     Output class to write events to connected Discord servers.
     """
 
+    _client: InternalMewbotDiscordClient
+
+    def __init__(self, active_client: InternalMewbotDiscordClient):
+        """
+        Initialise this class with a client to effect changes to discord beyond replying.
+
+        :param active_client:
+        """
+        self._client = active_client
+
     @staticmethod
     def consumes_outputs() -> Set[Type[OutputEvent]]:
         """
@@ -313,22 +335,79 @@ class DiscordOutput(Output):
             return False
 
         if isinstance(event, DiscordReplyToMessageOutputEvent):
-            await event.message.reply(event.text)
-            return True
+            return await self._process_reply_to_message(event)
 
         if isinstance(event, DiscordReplyIntoMessageChannelOutputEvent):
-            await event.message.channel.send(event.text)
-            return True
+            return await self._process_reply_into_message_channel_event(event)
 
         if isinstance(event, DiscordOutputEvent):
-            # Don't know how to send this message
-            if event.message is None:
-                return False
+            return await self._process_bare_event(event)
 
-            await event.message.channel.send(event.text)
-            return True
+        if isinstance(event, DiscordPostToChannelOutputEvent):
+            return await self._process_post_to_channel_output_evnet(event)
 
         raise NotImplementedError("Currently can only respond to a message")
+
+    @staticmethod
+    async def _process_reply_to_message(event: DiscordReplyToMessageOutputEvent) -> bool:
+        """
+        Process a DiscordReplyToMessageOutputEvent event.
+
+        :param event:
+        :return:
+        """
+        await event.message.reply(event.text)
+        return True
+
+    @staticmethod
+    async def _process_reply_into_message_channel_event(
+        event: DiscordReplyIntoMessageChannelOutputEvent,
+    ) -> bool:
+        """
+        Reply into the same channel which produced the message.
+
+        :param event:
+        :return:
+        """
+        await event.message.channel.send(event.text)
+        return True
+
+    @staticmethod
+    async def _process_bare_event(event: DiscordOutputEvent) -> bool:
+        """
+        Process a bare DiscordOutputEvent event.
+
+        :param event:
+        :return:
+        """
+        # Don't know how to send this message
+        if event.message is None:
+            return False
+
+        await event.message.channel.send(event.text)
+        return True
+
+    async def _process_post_to_channel_output_evnet(
+        self, event: DiscordPostToChannelOutputEvent
+    ) -> bool:
+        """
+        Process a DiscordPostToChannelOutputEvent.
+
+        This instructs the bot to post to an existing channel.
+        :param event:
+        :return:
+        """
+        channel_id = event.channel_id
+
+        channel = self._client.get_channel(channel_id)
+        if channel is None:
+            return False
+        if isinstance(channel, (discord.abc.PrivateChannel, discord.abc.GuildChannel)):
+            return False
+
+        await channel.send(event.text)
+
+        return True
 
 
 __all__ = [

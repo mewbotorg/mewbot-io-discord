@@ -94,3 +94,33 @@ class DiscordReplyToMessageOutputEvent(DiscordInputEvent):
 
     text: str
     message: discord.Message
+
+
+@dataclasses.dataclass
+class DiscordPostToChannelOutputEvent(DiscordInputEvent):
+    """
+    Post a message into a particular channel identified with an id.
+    """
+
+    channel_id: int
+
+    # Contents to post to the channel
+    text: Optional[str]
+    picture: Optional[bytes]
+
+
+# Thought - schedule events in order?
+# A scheduler which can run one event after another or a series of events
+# Callbacks to trigger when an event has been sent - or on execution of an event
+
+
+# @dataclasses.dataclass
+# class DiscordCreateChannel(DiscordOutputEvent):
+#     """
+#     Instruct a discord server to create a channel.
+#     """
+#
+#     # The guild to create the channel in
+#     guild_id: str
+#     # Name of the channel to create
+#     channel_name: str
