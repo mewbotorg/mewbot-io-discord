@@ -316,7 +316,6 @@ class DiscordOutput(Output):
         """
         self._client = active_client
 
-    # Todo: Not sure this is working how intended - is not firing on child classes
     @staticmethod
     def consumes_outputs() -> Set[Type[OutputEvent]]:
         """
