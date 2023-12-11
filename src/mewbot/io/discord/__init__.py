@@ -44,7 +44,7 @@ class DiscordIO(IOConfig):
     @property
     def token(self) -> str:
         """
-        The token this IOCofig is using to log into Discord.
+        The token this IOConfig is using to log into Discord.
         """
         return self._token
 
@@ -316,12 +316,18 @@ class DiscordOutput(Output):
         """
         self._client = active_client
 
+    # Todo: Not sure this is working how intended - is not firing on child classes
     @staticmethod
     def consumes_outputs() -> Set[Type[OutputEvent]]:
         """
         Defines the set of output events that this Output class can consume.
         """
-        return {DiscordOutputEvent}
+        return {
+            DiscordOutputEvent,
+            DiscordReplyToMessageOutputEvent,
+            DiscordReplyIntoMessageChannelOutputEvent,
+            DiscordPostToChannelOutputEvent,
+        }
 
     async def output(self, event: OutputEvent) -> bool:
         """
@@ -331,7 +337,7 @@ class DiscordOutput(Output):
         :return:
         """
 
-        if not isinstance(event, DiscordOutputEvent):
+        if not isinstance(event, tuple(self.consumes_outputs())):
             return False
 
         if isinstance(event, DiscordReplyToMessageOutputEvent):
@@ -340,11 +346,11 @@ class DiscordOutput(Output):
         if isinstance(event, DiscordReplyIntoMessageChannelOutputEvent):
             return await self._process_reply_into_message_channel_event(event)
 
-        if isinstance(event, DiscordOutputEvent):
-            return await self._process_bare_event(event)
-
         if isinstance(event, DiscordPostToChannelOutputEvent):
             return await self._process_post_to_channel_output_evnet(event)
+
+        if isinstance(event, DiscordOutputEvent):
+            return await self._process_bare_event(event)
 
         raise NotImplementedError("Currently can only respond to a message")
 
