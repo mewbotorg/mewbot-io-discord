@@ -11,6 +11,7 @@ from __future__ import annotations
 from typing import List, Optional, Sequence, Set, Type
 
 import logging
+import uuid
 
 import discord
 from mewbot.api.v1 import Input, InputEvent, InputQueue, IOConfig, Output, OutputEvent
@@ -306,6 +307,8 @@ class DiscordOutput(Output):
     Output class to write events to connected Discord servers.
     """
 
+    output_uuid: str
+
     _client: InternalMewbotDiscordClient
 
     def __init__(self, active_client: InternalMewbotDiscordClient):
@@ -316,16 +319,15 @@ class DiscordOutput(Output):
         """
         self._client = active_client
 
+        self.output_uuid = str(uuid.uuid4())
+
     @staticmethod
     def consumes_outputs() -> Set[Type[OutputEvent]]:
         """
         Defines the set of output events that this Output class can consume.
         """
         return {
-            DiscordOutputEvent,
-            DiscordReplyToMessageOutputEvent,
-            DiscordReplyIntoMessageChannelOutputEvent,
-            DiscordPostToChannelOutputEvent,
+            DiscordOutputEvent
         }
 
     async def output(self, event: OutputEvent) -> bool:
