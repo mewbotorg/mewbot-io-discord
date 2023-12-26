@@ -84,7 +84,7 @@ class DiscordReplyIntoMessageChannelOutputEvent(DiscordOutputEvent):
 
 
 @dataclasses.dataclass
-class DiscordReplyToMessageOutputEvent(DiscordInputEvent):
+class DiscordReplyToMessageOutputEvent(DiscordOutputEvent):
     """
     Reply to a triggering message.
 
@@ -97,7 +97,7 @@ class DiscordReplyToMessageOutputEvent(DiscordInputEvent):
 
 
 @dataclasses.dataclass
-class DiscordPostToChannelOutputEvent(DiscordInputEvent):
+class DiscordPostToChannelOutputEvent(DiscordOutputEvent):
     """
     Post a message into a particular channel identified with an id.
     """
@@ -105,7 +105,7 @@ class DiscordPostToChannelOutputEvent(DiscordInputEvent):
     channel_id: int
 
     # Contents to post to the channel
-    text: Optional[str]
+    text: str
     picture: Optional[bytes]
 
 

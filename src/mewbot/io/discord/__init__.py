@@ -11,6 +11,7 @@ from __future__ import annotations
 from typing import List, Optional, Sequence, Set, Type
 
 import logging
+import uuid
 
 import discord
 from mewbot.api.v1 import Input, InputEvent, InputQueue, IOConfig, Output, OutputEvent
@@ -44,7 +45,7 @@ class DiscordIO(IOConfig):
     @property
     def token(self) -> str:
         """
-        The token this IOCofig is using to log into Discord.
+        The token this IOConfig is using to log into Discord.
         """
         return self._token
 
@@ -306,6 +307,8 @@ class DiscordOutput(Output):
     Output class to write events to connected Discord servers.
     """
 
+    output_uuid: str
+
     _client: InternalMewbotDiscordClient
 
     def __init__(self, active_client: InternalMewbotDiscordClient):
@@ -315,6 +318,8 @@ class DiscordOutput(Output):
         :param active_client:
         """
         self._client = active_client
+
+        self.output_uuid = str(uuid.uuid4())
 
     @staticmethod
     def consumes_outputs() -> Set[Type[OutputEvent]]:
@@ -331,7 +336,7 @@ class DiscordOutput(Output):
         :return:
         """
 
-        if not isinstance(event, DiscordOutputEvent):
+        if not isinstance(event, tuple(self.consumes_outputs())):
             return False
 
         if isinstance(event, DiscordReplyToMessageOutputEvent):
@@ -340,11 +345,11 @@ class DiscordOutput(Output):
         if isinstance(event, DiscordReplyIntoMessageChannelOutputEvent):
             return await self._process_reply_into_message_channel_event(event)
 
-        if isinstance(event, DiscordOutputEvent):
-            return await self._process_bare_event(event)
-
         if isinstance(event, DiscordPostToChannelOutputEvent):
             return await self._process_post_to_channel_output_evnet(event)
+
+        if isinstance(event, DiscordOutputEvent):
+            return await self._process_bare_event(event)
 
         raise NotImplementedError("Currently can only respond to a message")
 
