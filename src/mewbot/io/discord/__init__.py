@@ -326,9 +326,7 @@ class DiscordOutput(Output):
         """
         Defines the set of output events that this Output class can consume.
         """
-        return {
-            DiscordOutputEvent
-        }
+        return {DiscordOutputEvent}
 
     async def output(self, event: OutputEvent) -> bool:
         """
