@@ -27,6 +27,7 @@ from mewbot.io.discord.events import (
     DiscordReplyToMessageOutputEvent,
     DiscordUserJoinInputEvent,
 )
+from mewbot.io.discord.utils import split_text
 
 __version__ = "0.0.4"
 
@@ -311,6 +312,8 @@ class DiscordOutput(Output):
 
     _client: InternalMewbotDiscordClient
 
+    _logger: logging.Logger
+
     def __init__(self, active_client: InternalMewbotDiscordClient):
         """
         Initialise this class with a client to effect changes to discord beyond replying.
@@ -320,6 +323,8 @@ class DiscordOutput(Output):
         self._client = active_client
 
         self.output_uuid = str(uuid.uuid4())
+
+        self._logger = logging.getLogger("DiscordOutput")
 
     @staticmethod
     def consumes_outputs() -> Set[Type[OutputEvent]]:
@@ -340,32 +345,97 @@ class DiscordOutput(Output):
             return False
 
         if isinstance(event, DiscordReplyToMessageOutputEvent):
-            return await self._process_reply_to_message(event)
+            try:
+                return await self._process_reply_to_message(event)
+            except discord.errors.HTTPException:
+                self._logger.warning("Event could not be transmitted! - %s", str(event))
+                return False
 
         if isinstance(event, DiscordReplyIntoMessageChannelOutputEvent):
-            return await self._process_reply_into_message_channel_event(event)
+            try:
+                return await self._process_reply_into_message_channel_event(event)
+            except discord.errors.HTTPException:
+                self._logger.warning("Event could not be transmitted! - %s", str(event))
+                return False
 
         if isinstance(event, DiscordPostToChannelOutputEvent):
-            return await self._process_post_to_channel_output_evnet(event)
+            try:
+                return await self._process_post_to_channel_output_evnet(event)
+            except discord.errors.HTTPException:
+                self._logger.warning("Event could not be transmitted! - %s", str(event))
+                return False
 
         if isinstance(event, DiscordOutputEvent):
-            return await self._process_bare_event(event)
+            try:
+                return await self._process_bare_event(event)
+            except discord.errors.HTTPException:
+                self._logger.warning("Event could not be transmitted! - %s", str(event))
+                return False
 
         raise NotImplementedError("Currently can only respond to a message")
 
     @staticmethod
-    async def _process_reply_to_message(event: DiscordReplyToMessageOutputEvent) -> bool:
+    def _split_text(target_txt: str, char_limit: int = 2000) -> list[str]:
+        """
+        Split the text down into discord compliant chunks.
+
+        :param target_txt: The text to split down
+        :param char_limit: Maximum number of chars in a chunk
+        :return:
+        """
+        return split_text(target_txt, char_limit)
+
+    async def _process_reply_to_message(
+        self, event: DiscordReplyToMessageOutputEvent
+    ) -> bool:
         """
         Process a DiscordReplyToMessageOutputEvent event.
 
         :param event:
         :return:
         """
-        await event.message.reply(event.text)
+        try:
+            await event.message.reply(event.text)
+        except discord.errors.HTTPException:
+            self._logger.warning(
+                "HTTPException when attempting message reply - using fallback - %s",
+                str(event),
+            )
+            return await self._fallback_process_reply_to_message(event)
+
         return True
 
-    @staticmethod
+    async def _fallback_process_reply_to_message(
+        self, event: DiscordReplyToMessageOutputEvent
+    ) -> bool:
+        """
+        We could not reply to a message - possibly because the message is too long - fallback.
+
+        Split the message down into safer chunks and then try again with each chunk.
+        :param event:
+        :return:
+        """
+        event_text = event.text
+
+        event_text_tokens = self._split_text(event_text)
+
+        for event_text_token in event_text_tokens:
+            try:
+                await event.message.reply(event_text_token)
+            except discord.errors.HTTPException:
+                self._logger.warning(
+                    "Individual token failed to reply - "
+                    "there is no fallback - token = %s - event = %s - got (%i/%s) "
+                    "tokens on the wire",
+                    event_text_token,
+                    event,
+                )
+                return False
+
+        return True
+
     async def _process_reply_into_message_channel_event(
+        self,
         event: DiscordReplyIntoMessageChannelOutputEvent,
     ) -> bool:
         """
@@ -374,7 +444,44 @@ class DiscordOutput(Output):
         :param event:
         :return:
         """
-        await event.message.channel.send(event.text)
+        try:
+            await event.message.channel.send(event.text)
+        except discord.errors.HTTPException:
+            self._logger.warning(
+                "HTTPException when attempting message reply - using fallback - %s",
+                str(event),
+            )
+            return await self._fallback_process_reply_into_message_channel_event(event)
+
+        return True
+
+    async def _fallback_process_reply_into_message_channel_event(
+        self, event: DiscordReplyIntoMessageChannelOutputEvent
+    ) -> bool:
+        """
+        We could not reply to a message - possibly because the message is too long - fallback.
+
+        Split the message down into safer chunks and then try again with each chunk.
+        :param event:
+        :return:
+        """
+        event_text = event.text
+
+        event_text_tokens = self._split_text(event_text)
+
+        for event_text_token in event_text_tokens:
+            try:
+                await event.message.channel.send(event_text_token)
+            except discord.errors.HTTPException:
+                self._logger.warning(
+                    "Individual token failed to transmit - "
+                    "there is no fallback - token = %s - event = %s - "
+                    "got (%i/%s) tokens on the wire",
+                    event_text_token,
+                    event,
+                )
+                return False
+
         return True
 
     @staticmethod
@@ -406,15 +513,54 @@ class DiscordOutput(Output):
 
         channel = self._client.get_channel(channel_id)
         if channel is None:
-            return False
-        if isinstance(channel, (discord.abc.PrivateChannel, discord.abc.GuildChannel)):
+            self._logger.info(
+                "Failed to retrieve channel - cannot post - channel_id = %s",
+                channel_id)
             return False
 
-        await channel.send(event.text)
+        if isinstance(channel, (discord.abc.PrivateChannel, discord.abc.GuildChannel)):
+            self._logger.info(
+                "Channel was a private channel or a guild channel - cannot post - channel = %s",
+                channel)
+            return False
+
+        try:
+            await channel.send(event.text)
+        except discord.errors.HTTPException:
+
 
         return True
 
+    async def _fallback_post_to_channel_output_event(
+        self, event: DiscordPostToChannelOutputEvent
+    ) -> bool:
+        """
+        We could not reply to a message - possibly because the message is too long - fallback.
 
+        Split the message down into safer chunks and then try again with each chunk.
+        :param event:
+        :return:
+        """
+        channel_id = event.channel_id
+        channel = self._client.get_channel(channel_id)
+
+        event_text = event.text
+        event_text_tokens = self._split_text(event_text)
+
+        for event_text_token in event_text_tokens:
+            try:
+                await channel.send(event.text)
+            except discord.errors.HTTPException:
+                self._logger.warning(
+                    "Individual token failed to transmit - "
+                    "there is no fallback - token = %s - event = %s - "
+                    "got (%i/%s) tokens on the wire",
+                    event_text_token,
+                    event,
+                )
+                return False
+
+        return True
 __all__ = [
     "DiscordInputEvent",
     "DiscordMessageCreationEvent",
