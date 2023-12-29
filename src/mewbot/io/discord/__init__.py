@@ -527,7 +527,8 @@ class DiscordOutput(Output):
         try:
             await channel.send(event.text)
         except discord.errors.HTTPException:
-
+            self._logger.info("Message raised an HTTPException - falling back")
+            return await self._fallback_post_to_channel_output_event(event)
 
         return True
 
